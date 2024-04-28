@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:english_words/english_words.dart';
 
-part 'test_words_provider.g.dart';
+part 'init.g.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
