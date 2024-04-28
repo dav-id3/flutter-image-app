@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'test_words_provider.dart';
+part of 'init.dart';
 
 // **************************************************************************
 // RiverpodGenerator
