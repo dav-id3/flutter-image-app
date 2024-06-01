@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'provider.dart';
+part of 'note.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$noteContentsHash() => r'ce68e6ecc782128733b3dec2c81d129eadde3e1b';
+String _$noteServiceHash() => r'848497586c35c7ae73977450633ac4a1f6b6a2a0';
 
-/// See also [NoteContents].
-@ProviderFor(NoteContents)
-final noteContentsProvider =
-    AutoDisposeNotifierProvider<NoteContents, List<String>>.internal(
-  NoteContents.new,
-  name: r'noteContentsProvider',
+/// See also [NoteService].
+@ProviderFor(NoteService)
+final noteServiceProvider =
+    AutoDisposeNotifierProvider<NoteService, List<Note>>.internal(
+  NoteService.new,
+  name: r'noteServiceProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$noteContentsHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$noteServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$NoteContents = AutoDisposeNotifier<List<String>>;
+typedef _$NoteService = AutoDisposeNotifier<List<Note>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
