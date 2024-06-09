@@ -18,24 +18,18 @@ class NoteService extends _$NoteService {
     state = todos;
   }
 
-  Future<Note?> add() async {
-    final addedNote = await _sqfliteService.createNote();
-    await fetchAll();
-    return addedNote;
-  }
-
-  Future<void> delete(Note todo) async {
-    await _sqfliteService.deleteNote(todo.id);
+  Future<void> add() async {
+    await _sqfliteService.createNote();
     await fetchAll();
   }
 
-  Future<void> putNoteContent(Note todo, String content) async {
-    await _sqfliteService.updateNote(
-      todo.id,
-      null,
-      content,
-      null,
-    );
+  Future<void> delete(int id) async {
+    await _sqfliteService.deleteNote(id);
+    await fetchAll();
+  }
+
+  Future<void> putNoteContent(int id, String content) async {
+    await _sqfliteService.updateNote(id, content);
     await fetchAll();
   }
 }

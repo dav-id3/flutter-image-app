@@ -10,6 +10,15 @@ SqfliteService sqfliteService(SqfliteServiceRef ref) {
   return SqfliteService.getInstance();
 }
 
+// When the database is first created, create a table to store breeds
+// and a table to store dogs.
+Future<void> _onCreate(Database db, int version) async {
+  // Run the CREATE {breeds} TABLE statement on the database.
+  await db.execute(
+    'CREATE TABLE notes(id INTEGER PRIMARY KEY, content TEXT',
+  );
+}
+
 class SqfliteService {
   SqfliteService._();
 
@@ -19,66 +28,42 @@ class SqfliteService {
     final databasesPath = await getDatabasesPath();
     const dataBaseName = "hogehoge.db";
     final path = p.join(databasesPath, dataBaseName);
-    _database ??=
-        await openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute(
-          'CREATE TABLE todos(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NULL, content TEXT NULL, is_complete INTEGER, date_modified INTEGER)');
-    });
+    _database ??= await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
   Future<List<Note>> getAllNotes() async {
     if (_database == null) {
       await openDb();
     }
-    List<Map<String, dynamic>> todos = await _database
-            ?.rawQuery('SELECT * FROM todos ORDER BY date_modified DESC') ??
-        [];
-    return todos.map((e) => Note.fromJson(e)).toList();
+    List<Map<String, dynamic>> maps = await _database?.query('notes') ?? [];
+    return List.generate(maps.length, (index) => Note.fromMap(maps[index]));
   }
 
   Future<Note?> getNoteById(int id) async {
     if (_database == null) {
       await openDb();
     }
-    List<Map<String, dynamic>> todos = await _database
-            ?.rawQuery('SELECT * FROM todos WHERE id = ?', [id.toString()]) ??
-        [];
-    return todos.map((e) => Note.fromJson(e)).toList().firstOrNull;
+    List<Map<String, dynamic>> maps =
+        await _database?.query('notes', where: 'id = ?', whereArgs: [id]) ?? [];
+    return Note.fromMap(maps.first);
   }
 
-  Future<Note?> createNote() async {
+  Future<void> createNote() async {
     if (_database == null) {
       await openDb();
     }
-    final id = await _database?.insert('todos', {
-      'title': 'Hey',
-      'content': '',
-      'is_complete': 0,
-      'date_modified': DateTime.now().toUtc().millisecondsSinceEpoch
-    });
-    if (id == null) return null;
-    return await getNoteById(id);
+    await _database?.insert('notes', {'content': ""});
   }
 
-  Future<int?> updateNote(
-      int id, String? title, String? content, bool? isComplete) async {
+  Future<int?> updateNote(int id, String? content) async {
     if (_database == null) {
       await openDb();
     }
-    Map<String, dynamic> updatedNote = {
-      'title': title,
-      'content': content,
-      'is_fav': isComplete == true
-          ? 1
-          : isComplete == false
-              ? 0
-              : null,
-      'date_modified': DateTime.now().toUtc().millisecondsSinceEpoch
-    };
+    Map<String, dynamic> updatedNote = {'content': content};
     updatedNote.removeWhere((_, value) => value == null);
 
     return await _database?.update(
-      'todos',
+      'notes',
       updatedNote,
       where: "id = ?",
       whereArgs: [id.toString()],
@@ -90,7 +75,7 @@ class SqfliteService {
       await openDb();
     }
     return await _database
-        ?.delete('todos', where: "id = ?", whereArgs: [id.toString()]);
+        ?.delete('notes', where: "id = ?", whereArgs: [id.toString()]);
   }
 
   static SqfliteService getInstance() => SqfliteService._();
