@@ -15,7 +15,7 @@ SqfliteService sqfliteService(SqfliteServiceRef ref) {
 Future<void> _onCreate(Database db, int version) async {
   // Run the CREATE {breeds} TABLE statement on the database.
   await db.execute(
-    'CREATE TABLE notes(id INTEGER PRIMARY KEY, content TEXT',
+    'CREATE TABLE notes(id INTEGER PRIMARY KEY, content TEXT)',
   );
 }
 
@@ -26,7 +26,7 @@ class SqfliteService {
 
   Future<void> openDb() async {
     final databasesPath = await getDatabasesPath();
-    const dataBaseName = "hogehoge.db";
+    const dataBaseName = "test.db";
     final path = p.join(databasesPath, dataBaseName);
     _database ??= await openDatabase(path, version: 1, onCreate: _onCreate);
   }
@@ -52,7 +52,7 @@ class SqfliteService {
     if (_database == null) {
       await openDb();
     }
-    await _database?.insert('notes', {'content': ""});
+    await _database?.insert('notes', {'content': "new item"});
   }
 
   Future<int?> updateNote(int id, String? content) async {
